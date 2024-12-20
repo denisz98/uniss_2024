@@ -11,3 +11,4 @@ virtualenv/
 *.pot
 *.orig
 migrations/
+static/
