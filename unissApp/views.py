@@ -90,3 +90,74 @@ def eliminar_profesor(request, id_profesor):
     profesor.delete()
 
     return redirect("/profesor/")
+
+# ==========================================================Estudiante====================================================
+
+def estudiante(request):
+    # te obtienen las clases relacionadas a los estud
+    estudiantes = Estudiante.objects.prefetch_related('clase').all()
+
+    # Construimos la lista de estudiantes con sus clases
+    estudiante_data = [
+        {
+            'idEstudiante': estudiante.idEstudiante,
+            'nombre': estudiante.nombre,
+            'ci': estudiante.ci,
+            'telefono': estudiante.telefono,
+            'direccion': estudiante.direccion,
+            'agno_academico': estudiante.agno_academico,
+            'clase': list(estudiante.clase.all())  # Obtenemos todas las clases relacionadas
+        }
+        for estudiante in estudiantes
+    ]
+
+    return render(request, 'Estudiante/Estudiante.html', {"estudiante": estudiante_data})
+
+ # profesores = Profesor.objects.all()
+ #
+ #    return render(request, 'Profesor/Profesor.html', {"profesor": profesores})
+
+
+def insertar_estudiante(request):
+    if request.method == 'POST':
+        form = EstudianteForm(request.POST)
+        if form.is_valid():
+            # Usamos el método save() con commit=False para manejar ManyToManyField después
+            estudiante = form.save(commit=False)
+
+            # Guardamos la instancia del estudiante
+            estudiante.save()
+
+            # Asignamos las clases seleccionadas
+            clases = form.cleaned_data['clase']
+            estudiante.clase.set(clases)
+
+            return redirect('/estudiante/')
+    else:
+        form = EstudianteForm()
+
+    return render(request, 'Estudiante/form.html', {'miformulario': form})
+
+def editar_estudiante(request, id_estudiante):
+    # Obtén el estudiante o devuelve un error 404 si no existe
+    estudiante = get_object_or_404(Estudiante, idEstudiante=id_estudiante)
+
+    if request.method == "POST":
+        # Rellena el formulario con los datos enviados y la instancia existente
+        miformulario = EstudianteForm(request.POST, instance=estudiante)
+        if miformulario.is_valid():
+            # Guarda los cambios directamente, incluyendo relaciones ManyToMany
+            miformulario.save()
+            return redirect("/estudiante/")
+    else:
+        # Si es una solicitud GET, inicializa el formulario con la instancia existente
+        miformulario = EstudianteForm(instance=estudiante)
+
+    return render(request, 'Estudiante/form.html', {"miformulario": miformulario})
+def eliminar_estudiante(request, id_estudiante):
+    estudiante = Estudiante.objects.get(pk=id_estudiante)
+
+    estudiante.delete()
+
+    return redirect("/estudiante")
+
