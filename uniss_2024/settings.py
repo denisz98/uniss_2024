@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'unissApp.apps.UnissappConfig',
     "crispy_forms",
     "crispy_bootstrap5",
+    "rest_framework",
+    "drf_yasg"
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
