@@ -8,3 +8,6 @@ psycopg2-binary==2.9.10
 python-decouple==3.8
 soupsieve==2.6
 sqlparse==0.5.3
+
+djangorestframework~=3.15.2
+drf-yasg~=1.21.8
