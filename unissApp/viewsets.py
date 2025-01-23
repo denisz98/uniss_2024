@@ -36,3 +36,9 @@ class EstudianteViewSet(viewsets.ModelViewSet):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
     permission_classes = [IsAuthenticated]
+
+
+class CantidadEstudiantesView(APIView):
+    def get(self, request):
+        cantidad = Estudiante.objects.count()
+        return Response({'cantidad_estudiantes': cantidad}, status=status.HTTP_200_OK)
