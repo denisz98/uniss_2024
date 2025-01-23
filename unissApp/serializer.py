@@ -17,7 +17,6 @@ class ClaseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EstudianteSerializer(serializers.ModelSerializer):
-    clases = serializers.PrimaryKeyRelatedField(many=True, queryset=Clase.objects.all())
 
     class Meta:
         model = Estudiante
